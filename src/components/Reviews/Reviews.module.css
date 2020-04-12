@@ -1,0 +1,42 @@
+.reviewsContainer {
+  width: 75%;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.reviewsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.reviewsListItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding: 0 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px;
+}
+
+.reviewsListItemUserName {
+  margin: 0;
+  padding: 0;
+  word-wrap: break-word;
+  width: 25%;
+}
+
+.reviewsListItemReview {
+  margin: 0;
+  padding: 0;
+  padding: 10px;
+  width: 70%;
+  max-height: 250px;
+  overflow-y: scroll;
+}
+
+.NoReviews {
+  text-align: center;
+}

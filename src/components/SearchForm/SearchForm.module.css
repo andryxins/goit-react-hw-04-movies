@@ -1,0 +1,38 @@
+.formContainer {
+  margin: 0 auto;
+  margin-bottom: 15px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 75%;
+}
+
+.formField {
+  text-align: center;
+  font-size: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px;
+  background-color: #ffffff;
+  margin-bottom: 10px;
+  transition: box-shadow 0.2s linear;
+  width: 100%;
+}
+
+.formField:hover,
+.formField:focus,
+.formBtn:hover,
+.formBtn:focus {
+  box-shadow: 0 0 10px;
+}
+
+.formBtn {
+  width: 50%;
+  padding: 5px 0;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: #ffffff;
+  box-shadow: 0 0 5px;
+  transition: box-shadow 0.2s linear;
+}

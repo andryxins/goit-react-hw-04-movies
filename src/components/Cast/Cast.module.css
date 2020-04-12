@@ -1,0 +1,25 @@
+.castContainer {
+  width: 100%;
+  padding: 15px 0;
+}
+
+.castList {
+  margin: 0 auto;
+  padding: 0;
+  width: 50%;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.castListItem {
+  text-align: center;
+  max-width: 100px;
+  margin: 5px;
+}
+
+.castListItemName {
+  margin: 0;
+  padding: 0;
+}
