@@ -26,30 +26,6 @@ export default class MoviesPage extends Component {
     searchFilmList: [],
   };
 
-  handleChange = e => {
-    const { value } = e.target;
-    this.setState({ searchQuery: value });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-
-    const { searchQuery } = this.state;
-
-    if (!searchQuery) {
-      return;
-    }
-    this.props.history.push(
-      `${this.props.match.path}/?query=${this.state.searchQuery}`,
-    );
-  };
-
-  getFilms = currentQuery => {
-    fetchFilms
-      .getFilmByQuery(currentQuery)
-      .then(data => this.setState({ searchFilmList: [...data] }));
-  };
-
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevProps.location.search;
     const currentQuery = this.props.location.search;
@@ -73,6 +49,30 @@ export default class MoviesPage extends Component {
       this.setState({ searchQuery: parsedQuery });
     }
   }
+
+  handleChange = e => {
+    const { value } = e.target;
+    this.setState({ searchQuery: value });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+
+    const { searchQuery } = this.state;
+
+    if (!searchQuery) {
+      return;
+    }
+    this.props.history.push(
+      `${this.props.match.path}/?query=${this.state.searchQuery}`,
+    );
+  };
+
+  getFilms = currentQuery => {
+    fetchFilms
+      .getFilmByQuery(currentQuery)
+      .then(data => this.setState({ searchFilmList: [...data] }));
+  };
 
   render() {
     const { searchQuery, searchFilmList } = this.state;
