@@ -1,26 +1,24 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as fetchFilms from '../../services/fetchFilms';
 import FilmList from '../FilmList/FilmList';
 import Styles from './HomePage.module.css';
 
-export default class HomePage extends Component {
-  state = {
-    films: [],
-  };
+const HomePage = () => {
+  const [films, setFilms] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     fetchFilms
       .getPopularFilms()
-      .then(films => this.setState({ films: [...films] }));
-  }
+      .then(films => setFilms(films))
+      .catch(e => console.log(e));
+  }, []);
 
-  render() {
-    const { films } = this.state;
-    return (
-      <section className="container">
-        <h1 className={Styles.title}>Popular Movies</h1>
-        <FilmList films={films} />
-      </section>
-    );
-  }
-}
+  return (
+    <section className="container">
+      <h1 className={Styles.title}>Popular Movies</h1>
+      <FilmList films={films} />
+    </section>
+  );
+};
+
+export default HomePage;

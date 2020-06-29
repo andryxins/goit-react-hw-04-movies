@@ -1,4 +1,4 @@
-import React, { Component, lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useState, useEffect, useCallback } from 'react';
 import { Route } from 'react-router-dom';
 import queryString from 'query-string';
 import * as fetchFilms from '../../services/fetchFilms';
@@ -20,86 +20,62 @@ const asyncReviews = lazy(() =>
   import('../Reviews/Reviews' /* webpackChunkName: "movie-reviews" */),
 );
 
-export default class MoviesPage extends Component {
-  state = {
-    searchQuery: '',
-    searchFilmList: [],
-  };
+const MoviesPage = ({ location, history, match }) => {
+  const [searchQuery, setSearchQuery] = useState('');
 
-  componentDidUpdate(prevProps, prevState) {
-    const prevQuery = prevProps.location.search;
-    const currentQuery = this.props.location.search;
-
-    const parsedQuery = queryString.parse(currentQuery).query;
-
-    if (currentQuery && prevQuery !== currentQuery) {
-      this.setState({ searchQuery: parsedQuery });
-      this.getFilms(parsedQuery);
-    }
-  }
-
-  componentDidMount() {
-    const { search } = this.props.location;
-
-    if (search) {
-      const parsedQuery = queryString.parse(search).query;
-      if (!parsedQuery) return;
-
-      this.getFilms(parsedQuery);
-      this.setState({ searchQuery: parsedQuery });
-    }
-  }
-
-  handleChange = e => {
+  const handleChangeQuery = useCallback(e => {
     const { value } = e.target;
-    this.setState({ searchQuery: value });
-  };
+    setSearchQuery(value);
+  }, []);
 
-  handleSubmit = e => {
+  const handleSubmitSearchQuery = e => {
     e.preventDefault();
 
-    const { searchQuery } = this.state;
-
-    if (!searchQuery) {
-      return;
-    }
-    this.props.history.push(
-      `${this.props.match.path}/?query=${this.state.searchQuery}`,
-    );
+    if (searchQuery) history.push(`${match.path}/?query=${searchQuery}`);
   };
 
-  getFilms = currentQuery => {
+  const [searchFilmList, setSearchFilmsList] = useState([]);
+
+  const getFilms = currentQuery => {
     fetchFilms
       .getFilmByQuery(currentQuery)
-      .then(data => this.setState({ searchFilmList: [...data] }));
+      .then(data => setSearchFilmsList(data));
   };
 
-  render() {
-    const { searchQuery, searchFilmList } = this.state;
+  useEffect(() => {
+    if (location.search) {
+      const parsedQuery = queryString.parse(location.search).query;
+      if (parsedQuery) {
+        getFilms(parsedQuery);
+        setSearchQuery(parsedQuery);
+      }
+    }
+  }, [location.search]);
 
-    return (
-      <section className="container">
-        <Route
-          path="/movies"
-          exact
-          render={props => (
-            <>
-              <SearchForm
-                {...props}
-                value={searchQuery}
-                onSubmit={this.handleSubmit}
-                onChange={this.handleChange}
-              />
-              <FilmList films={searchFilmList} />
-            </>
-          )}
-        />
-        <Suspense fallback={<StartLoader />}>
-          <Route path="/movies/:id" component={asyncMovieDetailsPage} />
-          <Route path="/movies/:id/cast" component={asyncCast} />
-          <Route path="/movies/:id/reviews" component={asyncReviews} />
-        </Suspense>
-      </section>
-    );
-  }
-}
+  return (
+    <section className="container">
+      <Route
+        path="/movies"
+        exact
+        render={props => (
+          <>
+            <SearchForm
+              {...props}
+              value={searchQuery}
+              onSubmit={handleSubmitSearchQuery}
+              onChange={handleChangeQuery}
+            />
+            <FilmList films={searchFilmList} />
+          </>
+        )}
+      />
+      <Suspense fallback={<StartLoader />}>
+        <Route path="/movies/:id" component={asyncMovieDetailsPage} />
+        <Route path="/movies/:id/cast" component={asyncCast} />
+        <Route path="/movies/:id/reviews" component={asyncReviews} />
+      </Suspense>
+    </section>
+  );
+};
+
+export default MoviesPage;
